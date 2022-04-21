@@ -1,5 +1,5 @@
-apiVersion: apps/v1beta2
-kind: Deployment
+apiVersion: apps/v1
+kind: StatefulSet
 metadata:
   name: {{ template "svn.fullname" . }}
   labels:
@@ -10,11 +10,7 @@ metadata:
     deployment.kubernetes.io/revision: "2"
 spec:
   replicas: 1
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
+  serviceName: {{ template "svn.fullname" . }}
   selector:
     matchLabels:
       app: subversion-edge
@@ -27,6 +23,12 @@ spec:
     spec:
       containers:
       - env:
+          - name: JAVA_HOME
+            value: /usr/lib/jvm/java-8-openjdk-amd64
+          - name: RUN_AS_USER
+            value: collabnet
+          - name: SU_OPTS
+            value: "-m -s /bin/bash"
         name: {{ template "svn.name" . }}
         image: {{ .Values.subversion.imageName }}
         imagePullPolicy: IfNotPresent

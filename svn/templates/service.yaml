@@ -20,9 +20,9 @@ spec:
       targetPort: 4434
     - name: http-svn
       nodePort: {{ .Values.subversion.service.nodeProts.svn }}
-      port: 18080
+      port: 32080
       protocol: TCP
-      targetPort: 18080
+      targetPort: 32080
   selector:
     app: subversion-edge
     release: svn
